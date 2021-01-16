@@ -28,12 +28,9 @@ class QueueSimulation:
         await asyncio.gather(*added_tasks)
 
     async def process_at_index(self,index):
-        while (any(self.server_list) or not self.cycles) and self.cycles != self.max_cycles:
+        while (any(self.server_list) or not self.cycles):
             await asyncio.sleep(.01)
             while self.server_list[index]:
-                if self.cycles == self.max_cycles:
-                    self.print_lengths()
-                    exit()
                 await asyncio.sleep(self.processing_rate)
                 self.server_list[self.server_order[0]] -= 1
                 del self.server_order[0]
@@ -46,12 +43,12 @@ class QueueSimulation:
         self.server_order.append(min_index)
         
     async def queue_up(self):
-        while (any(self.server_list) or not self.cycles) \
-        and self.cycles != self.max_cycles:
+        while (any(self.server_list) or not self.cycles) and self.cycles != self.max_cycles:
             min_index = self.get_min_server()
             self.add_to_queue(min_index)
             self.cycles += 1
             await asyncio.sleep(self.queuing_rate)
+        self.print_lengths()
         exit()
         
     def get_min_server(self):
@@ -59,7 +56,7 @@ class QueueSimulation:
         return min_index
 
     async def async_print_lengths(self):
-        while (any(self.server_list) or not self.cycles) and self.cycles != self.max_cycles:
+        while (any(self.server_list) or not self.cycles):
             await asyncio.sleep(self.print_time)
             print('Cycles:',self.cycles)
             print(self.server_list)
@@ -69,6 +66,7 @@ class QueueSimulation:
         exit()
 
     def print_lengths(self):
+        print('Final Results')
         print('Cycles:',self.cycles)
         print(self.server_list)
         print('Processed:',self.processed)
