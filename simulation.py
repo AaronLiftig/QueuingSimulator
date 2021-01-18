@@ -32,8 +32,8 @@ class QueueSimulation:
             await asyncio.sleep(.01)
             while self.server_list[index]:
                 await asyncio.sleep(self.processing_rate)
-                self.server_list[self.server_order[0]] -= 1
-                del self.server_order[0]
+                self.server_list[index] -= 1
+                # del self.server_list[index]
                 self.processed += 1
         self.print_lengths()
         exit()
